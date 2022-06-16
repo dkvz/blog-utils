@@ -1,0 +1,20 @@
+---
+- hosts: dkvz_eu
+  remote_user: root
+  vars:
+    remote_dir: /srv/vhosts/dorade_api_spring/import
+    target_json: target.json
+  tasks:
+    - name: Copy article to destination
+      copy:
+        src: "{{ target_json }}"
+        dest: "{{ remote_dir }}/target.json"
+    - name: Change permission of file
+      file:
+        path: "{{ remote_dir }}/target.json"
+        mode: 0777
+    - name: Call the API
+      uri:
+        url: "http://api.dkvz.eu/import-articles"
+        return_content: yes
+
